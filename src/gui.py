@@ -20,6 +20,7 @@ class CoderGUI:
 
         self.root = tk.Tk()
         self.root.title('Encode-Decode')
+        self.root.resizable(False, False)
 
         # Left text area
         self.encode_area = tk.Text(self.root, font=('Arial', CoderGUI.font_sz), width=CoderGUI.text_area_width,
@@ -76,11 +77,15 @@ class CoderGUI:
         match mode:
             case 'Caesar':
                 if not re.fullmatch('^\d+$', key):
-                    return 'Please enter right key for encryption'
+                    return 'Please enter right key for encryption (format: any number)'
                 return Encrypt.caesar(input_text, int(key))
             case 'Vigenere':
+                if not re.fullmatch('^[a-zA-Z]+$', key):
+                    return 'Please enter right key for encryption (format: only letters)'
                 return Encrypt.vigenere(input_text, key)
             case 'Vernam':
+                if not re.fullmatch('^[a-zA-Z]+$', key):
+                    return 'Please enter right key for encryption (format: only letters)'
                 return Encrypt.vernam(input_text, key)
             case 'Base64':
                 return Encrypt.base64(input_text)
@@ -98,8 +103,12 @@ class CoderGUI:
             case 'Caesar':
                 return Decrypt.caesar(cypher_text)
             case 'Vigenere':
+                if not re.fullmatch('^[a-zA-Z]+$', key):
+                    return 'Please enter right key for encryption (format: only letters)'
                 return Decrypt.vigenere(cypher_text, key)
             case 'Vernam':
+                if not re.fullmatch('^[a-zA-Z]+$', key):
+                    return 'Please enter right key for encryption (format: only letters)'
                 return Decrypt.vernam(cypher_text, key)
             case 'Base64':
                 return Decrypt.base64(cypher_text)

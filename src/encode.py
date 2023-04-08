@@ -44,13 +44,19 @@ class Encrypt:
 
     @staticmethod
     def vernam(plain_text, key):
+        plain_text = plain_text.upper()
+        codes = [ord(elem.upper()) - ord('A') for elem in key]
         size = len(key)
 
         current_position = 0
         output = ''
 
         for item in plain_text:
-            output += chr(ord(item) ^ ord(key[current_position]))
+            if not item.isalpha():
+                output += item
+                continue
+
+            output += chr(((ord(item) - ord('A')) ^ codes[current_position]) + ord('A'))
             current_position = (current_position + 1) % size
 
         return output

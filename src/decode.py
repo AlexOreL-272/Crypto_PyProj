@@ -1,4 +1,3 @@
-from src.encode import Encrypt
 from src.globals import Globals
 
 from PIL import Image, ImageDraw
@@ -91,7 +90,26 @@ class Decrypt:
 
     @staticmethod
     def vernam(cypher_text, key):
-        return Encrypt.vernam(cypher_text, key)
+        codes = [ord(elem.upper()) - ord('A') for elem in key]
+        size = len(key)
+
+        current_position = 0
+        output = ''
+
+        for item in cypher_text:
+            possible_char_low = chr(((ord(item) - ord('a')) ^ codes[current_position]) + ord('a'))
+            possible_char_high = chr(((ord(item) - ord('A')) ^ codes[current_position]) + ord('A'))
+
+            if possible_char_low.isalpha():
+                output += possible_char_low
+                current_position = (current_position + 1) % size
+            elif possible_char_high.isalpha():
+                output += possible_char_high
+                current_position = (current_position + 1) % size
+            else:
+                output += item
+
+        return output
 
     @staticmethod
     def base64(cypher_text):
