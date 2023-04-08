@@ -10,12 +10,19 @@ from tkinter import filedialog
 
 
 class CoderGUI:
+    """
+    Class to run the Graphic User Interface for cryptographic application
+    """
     font_sz = 12
     padding = 10
     text_area_width = 40
     text_area_height = 20
 
     def __init__(self):
+        """ constructor for GUI object\n
+            creates a window with two text areas and a bunch of buttons
+        """
+
         self.loaded_file = ""
 
         self.root = tk.Tk()
@@ -74,6 +81,14 @@ class CoderGUI:
 
     @staticmethod
     def encrypt(mode, input_text, key=''):
+        """
+        :param mode: mode of encryption
+        :param input_text: text to encrypt
+        :param key: key used to encryption
+        :return: encrypted string or a warning message
+
+        performs encryption with output to right text area
+        """
         match mode:
             case 'Caesar':
                 if not re.fullmatch('^\d+$', key):
@@ -99,6 +114,14 @@ class CoderGUI:
                     return 'Please choose image with .png, .jpg, .jpeg or .bmp format'
 
     def decrypt(self, mode, cypher_text, key):
+        """
+        :param mode: mode of encryption
+        :param cypher_text: text to encrypt
+        :param key: key used to encryption
+        :return: decrypted string or a warning message
+
+        performs decryption with output to right text area
+        """
         match mode:
             case 'Caesar':
                 return Decrypt.caesar(cypher_text)
@@ -120,6 +143,9 @@ class CoderGUI:
                     return 'Please select encoded image (it is in .png format)'
 
     def execute(self):
+        """
+        "Let's go" button event handler.
+        """
         # Get the selected option and switcher value
         selected_option = self.select_coding.get()
         selected_mode = self.select_mode.get()
@@ -142,11 +168,17 @@ class CoderGUI:
         self.decode_area.insert(tk.END, output_text)
 
     def run(self):
+        """
+        runs the GUI
+        """
         self.select_coding.trace_add('write', lambda *_: self.show_elements())
         self.select_mode.trace_add('write', lambda *_: self.show_elements())
         self.root.mainloop()
 
     def show_elements(self):
+        """
+        Hides or reveals appropriate GUI elements
+        """
         # Show the key label and text area if the selected option requires a key
         coding = self.select_coding.get()
         mode = self.select_mode.get()
@@ -167,6 +199,9 @@ class CoderGUI:
                 self.configure_stega(mode)
 
     def show_key_area(self):
+        """
+        Shows text area to enter the key for en-/decoding
+        """
         self.save_file_button.pack_forget()
         self.key_text.pack(side=tk.BOTTOM, padx=CoderGUI.padding, pady=CoderGUI.padding)
         self.key_label.pack(side=tk.BOTTOM, padx=CoderGUI.padding, pady=CoderGUI.padding)
@@ -174,11 +209,18 @@ class CoderGUI:
         self.save_img_button.pack_forget()
 
     def delete_key_area(self):
+        """
+        Hides text area to enter key for en-/decoding
+        """
         self.key_label.pack_forget()
         self.key_text.pack_forget()
         self.save_img_button.pack_forget()
 
     def configure_stega(self, mode):
+        """
+        Shows appropriate elements for steganography en-/decryption
+        :param mode: Are we performing Encryption or Decryption
+        """
         if mode == 'Encrypt':
             self.save_file_button.pack_forget()
             self.save_keys_button.pack(side=tk.BOTTOM, padx=CoderGUI.padding, pady=CoderGUI.padding)
@@ -187,6 +229,9 @@ class CoderGUI:
             self.load_file_button.config(text='Load keys')
 
     def load_file(self):
+        """
+        Loads the user chosen file and puts its content into left text area
+        """
         filename = filedialog.askopenfilename()
         if filename and re.fullmatch('.+\.(txt|keys)', filename):
             with open(filename, 'r') as f:
@@ -198,13 +243,10 @@ class CoderGUI:
             self.decode_area.delete('1.0', tk.END)
             self.decode_area.insert('1.0', 'Please choose file in .txt or .keys format')
 
-    def load_image(self):
-        self.root.clipboard_clear()
-        self.root.clipboard_append(filedialog.askopenfilename())
-        self.decode_area.delete('1.0', tk.END)
-        self.decode_area.insert(tk.END, "Your image was loaded")
-
     def save_file(self):
+        """
+        Saves the file into user chosen directory
+        """
         filename = filedialog.asksaveasfilename(defaultextension='.txt',
                                                 filetypes=[('Text files', '*.txt'), ('All files', '*.*')])
         if filename:
@@ -213,12 +255,18 @@ class CoderGUI:
 
     @staticmethod
     def save_keys():
+        """
+        Saves file with steganography keys into user chosen directory
+        """
         filename = filedialog.asksaveasfilename(defaultextension='.keys', filetypes=[('All files', '*.*')])
         if filename:
             shutil.copyfile('coords.keys', filename)
 
     @staticmethod
     def save_image():
+        """
+        Saves steganography encrypted image into user chosen directory
+        """
         filename = filedialog.asksaveasfilename(defaultextension='.png',
                                                 filetypes=[('Image files', '*.png'), ('All files', '*.*')])
         if filename:

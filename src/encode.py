@@ -7,10 +7,20 @@ import re
 
 
 class Encrypt:
+    """
+    Class with encryption methods
+    """
     base64_step = 3
 
     @staticmethod
     def caesar(plain_text, rot):
+        """
+        :param plain_text: text to be encrypted
+        :param rot: rotation of Caesar cipher
+        :return: encrypted string
+
+        Performs Caesar encryption upon the given text
+        """
         encrypted = ''
 
         for item in plain_text:
@@ -25,6 +35,13 @@ class Encrypt:
 
     @staticmethod
     def vigenere(plain_text, key):
+        """
+        :param plain_text: text to be encrypted
+        :param key: key of Vigenere cipher
+        :return: encrypted string
+
+        Performs Vigenere encryption upon the given text
+        """
         codes = [ord(elem.lower()) - ord('a') for elem in key]
         current_position = 0
         size = len(codes)
@@ -44,6 +61,12 @@ class Encrypt:
 
     @staticmethod
     def vernam(plain_text, key):
+        """
+        Performs Vernam encryption upon the given text
+        :param plain_text: text to be encrypted
+        :param key: key of Vernam cipher
+        :return: encrypted string
+        """
         plain_text = plain_text.upper()
         codes = [ord(elem.upper()) - ord('A') for elem in key]
         size = len(key)
@@ -63,6 +86,12 @@ class Encrypt:
 
     @staticmethod
     def base64(plain_text):
+        """
+        :param plain_text: text to be encrypted
+        :return: encrypted string
+
+        Performs Base64 encryption upon the given text
+        """
         # default base64 encryption
         tail = (-len(plain_text)) % Encrypt.base64_step  # need size of plain text to be divisible by 6
         plain_text += '\x00' * tail  # adding zero-bits to the end for padding
@@ -86,6 +115,14 @@ class Encrypt:
 
     @staticmethod
     def stega(text, image_path):
+        """
+        :param text: text to be encrypted
+        :param image_path: path to an image to encode the text
+        :return: encrypted string
+
+        Encrypts the given text slightly changing random pixels bits
+        """
+
         img = Image.open(image_path)
         pixels = img.load()
         width, height = img.size[0], img.size[1]

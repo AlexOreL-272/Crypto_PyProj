@@ -7,6 +7,9 @@ import re
 
 
 class Decrypt:
+    """
+    Class with decryption methods
+    """
     base64_step = 4
 
     frequency_in_english = (43.31, 10.56, 23.13, 17.25, 56.88, 9.24,
@@ -17,6 +20,12 @@ class Decrypt:
 
     @staticmethod
     def __get_caesar_rot__(cypher_text):
+        """
+        :param cypher_text: encoded text
+        :return: rotation of Caesar cypher
+
+        Uses frequency analysis to find the rotation of Caesar cypher
+        """
         # assume that length of cypher text is big enough to use frequency method
         mp = {Globals.base64_alphabet[i]: 0 for i in range(Globals.alphabet_len)}
         text_copy = re.sub('[^\w]', '', cypher_text).upper()
@@ -40,6 +49,12 @@ class Decrypt:
 
     @staticmethod
     def caesar(cypher_text):
+        """
+        :param cypher_text: encoded text
+        :return: decrypted string
+
+        Performs automatic Caesar decryption using frequency analysis. Works for pretty long inputs
+        """
         decrypted = ''
         rot = Decrypt.__get_caesar_rot__(cypher_text)
 
@@ -55,6 +70,13 @@ class Decrypt:
 
     @staticmethod
     def __get_vigenere_key__(cypher_text, key_len):
+        """
+        :param cypher_text: text to decrypt
+        :param key_len: length of key
+        :return: key used to encrypt this text
+
+        Finds Vigenere key using frequency analysis. Does not needed in this version of project
+        """
         text_copy = re.sub('[^\w]', '', cypher_text)
         output = ''
 
@@ -68,6 +90,13 @@ class Decrypt:
 
     @staticmethod
     def vigenere(cypher_text, key):
+        """
+        :param cypher_text: encoded text
+        :param key: key to decrypt the text
+        :return: decrypted string
+
+        Performs Vigenere decryption of given text
+        """
         # Firstly, I wanted to decrypt Vigenere automatically like Caesar, but...
         # key = Decrypt.get_vigenere_key(cypher_text, Decrypt.get_vigenere_key_len(cypher_text))
         codes = [ord(elem.lower()) - ord('a') for elem in key]
@@ -90,6 +119,13 @@ class Decrypt:
 
     @staticmethod
     def vernam(cypher_text, key):
+        """
+        :param cypher_text: encoded text
+        :param key: key to decrypt the text
+        :return: decrypted string
+
+        Performs Vernam decryption of given text
+        """
         codes = [ord(elem.upper()) - ord('A') for elem in key]
         size = len(key)
 
@@ -113,6 +149,12 @@ class Decrypt:
 
     @staticmethod
     def base64(cypher_text):
+        """
+        :param cypher_text: encoded text
+        :return: decrypted string
+
+        Performs Base64 decryption of given text
+        """
         tail = cypher_text.count('=')
         cypher_text = cypher_text.replace('=', 'A')
 
@@ -135,6 +177,13 @@ class Decrypt:
 
     @staticmethod
     def stega(keys_path, image_path):
+        """
+        :param keys_path: path to file with steganography keys
+        :param image_path: path to encrypted image
+        :return: decrypted string
+
+        Performs steganography decryption of given image (in .bmp, .png or .jpeg format)
+        """
         decrypted = ''
         img = Image.open(image_path)
         pixels = img.load()

@@ -1,4 +1,8 @@
 class Globals:
+    """
+    Class with global variables
+    """
+
     base64_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
     alphabet_len = 26
     char_6bit = 6
